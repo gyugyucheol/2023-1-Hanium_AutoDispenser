@@ -139,15 +139,21 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="TC_config.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="23_4test.c">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="timer_delay.c">
+    <None Include="timer_delay.c">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="robotArmtest.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="verticalmovetest.c">
+    <None Include="verticalmovetest.c">
       <SubType>compile</SubType>
-    </Compile>
+    </None>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
