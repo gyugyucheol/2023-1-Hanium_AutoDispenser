@@ -1,4 +1,4 @@
-#define F_CPU 16000000L
+ï»¿#define F_CPU 16000000L
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -7,10 +7,10 @@ int main(void)
 	//microstep = 1/2
 	
 	
-	//2000us, 2000us¸¦ ÁÖ¸é ÀÌ»óÇÏ°Ô ÀÛµ¿¾ÈÇÑ´Ù.
+	//2000us, 2000usë¥¼ ì£¼ë©´ ì´ìƒí•˜ê²Œ ì‘ë™ì•ˆí•œë‹¤.
 	
 	DDRA |= 0x01;
-	DDRC |= 0x07;				// ¸ğÅÍ Á¦¾î ÇÉÀ» Ãâ·ÂÀ¸·Î ¼³Á¤
+	DDRC |= 0x07;				// ëª¨í„° ì œì–´ í•€ì„ ì¶œë ¥ìœ¼ë¡œ ì„¤ì •
 	DDRB |= (1 << PORTB5);
 	//PTC0 : clock
 	//PTC1 : direction
@@ -34,10 +34,10 @@ int main(void)
 		
 		PORTC |= (1<<PORTC1);			// counterclockwise
 		PORTA |= 0x01;			// LED off
-		for(int i = 0; i <= loopnum; i++){		// 400 ½ºÅÜ ÁøÇà
-			PORTB |= (1 << PORTB5);			// »ó½Â ¿¡Áö
+		for(int i = 0; i <= loopnum; i++){		// 400 ìŠ¤í… ì§„í–‰
+			PORTB |= (1 << PORTB5);			// ìƒìŠ¹ ì—ì§€
 			_delay_us(halfperiod);
-			PORTB &= ~(1 << PORTB5);			// ÇÏ°­ ¿¡Áö
+			PORTB &= ~(1 << PORTB5);			// í•˜ê°• ì—ì§€
 			_delay_us(halfperiod);
 		
 			
@@ -46,10 +46,10 @@ int main(void)
 
 		PORTC &= ~(1<<PORTC1);			// clockwise
 		PORTA &= ~0x01;			// LED on
-		for(int i = 0; i < loopnum; i++){		// 400 ½ºÅÜ ÁøÇà
-			PORTB |= (1 << PORTB5);			// »ó½Â ¿¡Áö
+		for(int i = 0; i < loopnum; i++){		// 400 ìŠ¤í… ì§„í–‰
+			PORTB |= (1 << PORTB5);			// ìƒìŠ¹ ì—ì§€
 			_delay_us(halfperiod);
-			PORTB &= ~(1 << PORTB5);			// ÇÏ°­ ¿¡Áö
+			PORTB &= ~(1 << PORTB5);			// í•˜ê°• ì—ì§€
 			_delay_us(halfperiod);
 		}
 		
