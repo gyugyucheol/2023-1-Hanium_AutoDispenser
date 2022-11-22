@@ -6,6 +6,8 @@
 #include "servoMove.h"
 #include "stepMove.h"
 
+
+
 int main(void)
 {
 	DDRA |= (1 << PORTA0);
@@ -27,101 +29,34 @@ int main(void)
 	
 
 	while(1) {
+		PWMSet_TC3(3, 8.1);
+		PWMSet_TC3(2, 8);
+		PWMSet_TC3(1, 7);
 		
-		//1 : 6.2%(맞물려닫힘), 6.2%(작은 음료수캔 잡음), 7%(작은음료수캔 잡기전 벌림), 9.5%(180도로 열림), 11%(손등이 1자로 벌림)
-		//2 : 3%(90도)~ 8%(0도,가로)~ 13%(-90도)
-		//3 : 3.45%(안쪽 90도), 8.1%(0도), 12.9%(-90도)
-		
-		/*//동작 잘됨
-		PORTC |= (1<<PORTC5);
-		verticalMove();
-		_delay_ms(1000);
-		verticalStop();
-		_delay_ms(1000);
+		//MoveDown(200);
+		MoveRight(20);
+		PWMSet_TC3(1, 8);
 		
 		
-		PORTC &= ~(1<<PORTC5);
-		verticalMove();
-		_delay_ms(1000);
-		verticalStop();
-		_delay_ms(1000);
-		*/
+		MoveUp(60);
+		MoveLeft(20);
 		
-		/*horizontalMove()
-		 *_delay_ms(1000): 100mm
-		 *_delay_ms(2000): 200mm
-		 *_delay_ms(3000): 300mm
-		 * 가로축 최대 이동가능 전장 560mm 5600ms
-		 */
+		_delay_ms(2000);
 		
-		/*verticalMove()
-		 *_delay_ms(1000): 40mm(예상)
-		 *_delay_ms(2000): 80mm
-		 * 가로축 이동가능 전장 560mm 5600ms
-		 */
+		PWMSet_TC3(1, 6.2);
 		
-		//가로축 이동가능 전장 560mm 5600mm
-		//가로축 최대 이동가능 전장 710mm 17750ms 
-		PORTC &= ~(1<<PORTC1);//
-		verticalMove();
-		_delay_ms(1500);
+		_delay_ms(2000);
 		
-		verticalStop();
-		PORTC |= (1<<PORTC0);
-		_delay_ms(7000);
-		PORTC &= ~(1<<PORTC0);	
+		MoveUp(30);
 		
+		_delay_ms(2000);
 		
-		PORTC |= (1<<PORTC1);//
-		verticalMove();
-		_delay_ms(1500);
+		MoveRight(20);
 		
-		verticalStop();
-		PORTC |= (1<<PORTC0);
-		_delay_ms(7000);
-		PORTC &= ~(1<<PORTC0);	
+		_delay_ms(2000);
+		
+		MoveUp(20);
 	}
 	
 	return 0;
 }
-
-
-/*스텝모터 테스트 코드
-while(1)
-{
-	PORTC |= (1 << PORTC1);//PORTC1 high : CCW : leftmove
-	OCR1A = ICR1VALUE/2;
-	
-	PORTC |= (1 << PORTC5);//PORTC3 high : CCW : down
-	OC2PinStart();
-	
-	PORTA &= ~(1 << PORTA0);
-	
-	_delay_ms(1000);
-	
-	OC2PinStop();
-	OCR1A = ICR1VALUE;
-	_delay_ms(1000);
-	
-	PORTC &= ~(1 << PORTC1);//PORTC1 low : CW :rightmove
-	OCR1A = ICR1VALUE/2;
-	
-	PORTC &= ~(1 << PORTC5);//PORTC3 low : CW : up
-	OC2PinStart();
-	PORTA |= (1 << PORTA0);
-	_delay_ms(1000);
-	
-	OC2PinStop();
-	OCR1A = ICR1VALUE;
-	_delay_ms(1000);
-}
-
-
-		PWMSet_TC3(1,7.8);
-		PWMSet_TC3(2,8);
-		PWMSet_TC3(3,8.1);
-		_delay_ms(5000);
-		
-		PWMSet_TC3(1,6.2);
-		_delay_ms(5000);
-*/
