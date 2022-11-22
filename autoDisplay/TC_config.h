@@ -61,18 +61,6 @@ CTC모드일 경우 PWM파형 출력을 중단하려면
 파형 출력 모드 [COMn1,COMn2]를 변경하여야 됨. 
 ---------------------*/
 
-void OC0PinStart(void) {
-	//비교일치 발생시 핀 반전
-	TCCR0 |= (1 << COM00);
-	TCCR0 &= ~(1 << COM01);
-}
-
-void OC0PinStop(void) {
-	//비교일치 발생시 핀 LOW
-	TCCR0 &= ~(1 << COM00);
-	TCCR0 |= (1 << COM01);
-}
-
 void InitializeTimer0(void) {//세로축 PWM: PTB4
 	//PORT config : out
 	DDRB |= (1 << PORTB4);
@@ -81,14 +69,15 @@ void InitializeTimer0(void) {//세로축 PWM: PTB4
 	TCCR0 |= (1 << WGM01);//CTC mode
 	
 	//2. clear mode(temporary)
-	OC0PinStop();
+	TCCR0 &= ~(1 << COM00);
+	TCCR0 |= (1 << COM01);
 	
 	//3. Prescaler : 32 -> 16MHz/32 = 500KHz
 	TCCR0 |= (1 << CS00);
 	TCCR0 |= (1 << CS01);
 	
-	//4. 500kHz/ (125*2) = 2000Hz
-	OCR0 = 125;
+	//4. 500kHz/ ((124+1)*2) = 2000Hz
+	OCR0 = 124;
 	
 	/*------OCR value-------------------------------
 	OCR0 = 125 is best for now
@@ -98,17 +87,7 @@ void InitializeTimer0(void) {//세로축 PWM: PTB4
 }
 
 
-void OC2PinStart(void) {
-	//비교일치 발생시 핀 반전
-	TCCR2 |= (1 << COM20);
-	TCCR2 &= ~(1 << COM21);
-}
 
-void OC2PinStop(void) {
-	//비교일치 발생시 핀 LOW
-	TCCR2 &= ~(1 << COM20);
-	TCCR2 |= (1 << COM21);
-}
 void InitializeTimer2(void) {//가로축 PWM: PTB7
 	
 	//PORT config : out
@@ -118,14 +97,15 @@ void InitializeTimer2(void) {//가로축 PWM: PTB7
 	TCCR2 |= (1 << WGM21);
 	
 	//2. clear mode(temporary)
-	OC2PinStop();
+	TCCR2 &= ~(1 << COM20);
+	TCCR2 |= (1 << COM21);
 	
 	//3. Prescaler : 64 -> 16MHz/64 = 250KHz
 	TCCR2 |= (1 << CS20);
 	TCCR2 |= (1 << CS21);
 	
-	//4. 250kHz/ (125*2) = 1000Hz
-	OCR2 = 125;
+	//4. 250kHz/ ((124+1)*2) = 1000Hz
+	OCR2 = 124;
 	
 	/*------OCR value-------------------------------
 	OCR2 = 125 is best for now
@@ -137,7 +117,6 @@ void InitializeTimer2(void) {//가로축 PWM: PTB7
 
 void InitializeTimer1(void)
 {/*
-	//가로축 clock
 	DDRB |= (1 << PORTB5) | (1 << PORTB6);//clock
 	
 	
@@ -174,8 +153,8 @@ void InitializeTimer3(void)
 	TCCR3A &= ~(1 << COM3B0);
 	TCCR3A |= (1 << COM3B1);
 	
-	TCCR3A &= ~(1 << COM3B0);
-	TCCR3A |= (1 << COM3B1);
+	TCCR3A &= ~(1 << COM3C0);
+	TCCR3A |= (1 << COM3C1);
 	
 	TCCR3B |= (1 << CS11);	
 	
@@ -188,13 +167,6 @@ void InitializeTimer3(void)
 	//이 때부터 timer 시작
 }
 
-void PWMSet_TC3(int channel, float percentage){
-	switch(channel) {
-		case 1 : OCR3A = percentage*400; break;
-		case 2 : OCR3B = percentage*400; break;
-		case 3 : OCR3C = percentage*400; break;
-	}
-}
 
 
 

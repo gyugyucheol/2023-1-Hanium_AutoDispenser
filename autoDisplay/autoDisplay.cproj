@@ -139,6 +139,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="servoMove.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="stepMove.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="TC_config.h">
       <SubType>compile</SubType>
     </Compile>
