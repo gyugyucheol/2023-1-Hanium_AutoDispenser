@@ -9,8 +9,6 @@
 #ifndef TC_CONFIG_H_
 #define TC_CONFIG_H_
 
-#define ICR1VALUE 40000
-#define ICR3VALUE 40000
 /*------------TIP1-----------------------------
 16bit OCR, ICR은 16bit로 OCRnH, OCRnL로 1byte register로 나누어져있다.
 하지만 OCRn, ICRn 으로 접근 가능
@@ -115,23 +113,37 @@ void InitializeTimer2(void) {//가로축 PWM: PTB7
 
 }
 
+//OC1C는 OC2 핀과 겹치므로 사용 금지
 void InitializeTimer1(void)
-{/*
-	DDRB |= (1 << PORTB5) | (1 << PORTB6);//clock
+{
+	//(파형 출력 안함)
+	//DDRB |= (1 << PORTB5) | (1 << PORTB6);
 	
-	
+	//1. top값이 ICRn인 고속PWM모드 ([WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0])
+	//OCn pin을 사용할 것은 아니라서 파형 생성모드는 안 중요.
 	TCCR1A |= (1 << WGM11);
-	TCCR1B |= (1 << WGM12) | (1 << WGM13);
+	TCCR1B |= (1 << WGM12) 
+		    | (1 << WGM13);
 	
-	TCCR1A |= (1 << COM1A1);
+	// 2. 파형 출력 모드 : 없음(파형 출력 안함)
+	/*//default값과 같음
+	TCCR3A &= ~(1 << COM3A0);
+	TCCR3A &= ~(1 << COM3A1);
 	
-	TCCR1B |= (1 << CS11);		
+	TCCR3A &= ~(1 << COM3B0);
+	TCCR3A &= ~(1 << COM3B1);
 	
-	ICR1 = ICR1VALUE-1;				// 2Mhz/40000 = 50Hz 
-	OCR1A = ICR1;
+	TCCR3A &= ~(1 << COM3C0);
+	TCCR3A &= ~(1 << COM3C1);
+	*/
 	
-	//OC1C는 OC2 핀과 겹치므로 사용 금지
-*/}
+	//3. Prescaler : 1 -> 16MHz/1 = 16MHz
+	TCCR1B |= (1 << CS10);		
+	
+	ICR1 = 16000-1;				// 4. 16MHz/16000 = 1KHz 
+	
+	
+}
 
 
 
@@ -139,13 +151,12 @@ void InitializeTimer3(void)
 {
 	DDRE |= (1 << PORTE3) | (1 << PORTE4) | (1 << PORTE5);
 	
-	//[WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0]
-	//top값이 ICRn인 고속PWM모드
+	//1. top값이 ICRn인 고속PWM모드 ([WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0])
 	TCCR3A |= (1 << WGM31);
-	TCCR3B |= (1 << WGM32) | (1 << WGM33);
+	TCCR3B |= (1 << WGM32) 
+	        | (1 << WGM33);
 	
-	//고속PWM에서
-	//[COMnA1, COMnA0] = [1, 0]
+	//2. 파형 출력 모드 : 고속PWM에서 비반전 모드([COMnA1, COMnA0] = [1, 0])
 	//비교 일치가 발생하면 OCnA 핀의 출력은 LOW값으로 바뀌고, BOTTOM에서 HIGH값으로 바뀐다(비반전 모드)
 	TCCR3A &= ~(1 << COM3A0);
 	TCCR3A |= (1 << COM3A1);
@@ -156,14 +167,15 @@ void InitializeTimer3(void)
 	TCCR3A &= ~(1 << COM3C0);
 	TCCR3A |= (1 << COM3C1);
 	
-	TCCR3B |= (1 << CS11);	
+	//3. Prescaler : 8 -> 16MHz/8 = 2MHz
+	TCCR3B |= (1 << CS31);	
 	
-	OCR3A = ICR3VALUE;
-	OCR3B = ICR3VALUE;
-	OCR3C = ICR3VALUE;
+	OCR3A = 40000;
+	OCR3B = 40000;
+	OCR3C = 40000;
 	
 	//ICR 초기값 0
-	ICR3 = ICR3VALUE-1;				// 2Mhz/40000 = 50Hz
+	ICR3 = 40000-1;				// 4. 2MHz/40000 = 50Hz
 	//이 때부터 timer 시작
 }
 
