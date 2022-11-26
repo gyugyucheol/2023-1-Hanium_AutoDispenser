@@ -120,7 +120,10 @@ void InitializeTimer1(void)
 	//DDRB |= (1 << PORTB5) | (1 << PORTB6);
 	
 	//1. top값이 ICRn인 고속PWM모드 ([WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0])
-	//OCn pin을 사용할 것은 아니라서 파형 생성모드는 안 중요.
+	/*						TOP		update		TOVn Flag set
+	 * 12: CTC mode			ICRn	immediate	MAX(0xFFFF)
+	 * 14: fast PWM mode	ICRn	BOTTOM		TOP
+	 */
 	TCCR1A |= (1 << WGM11);
 	TCCR1B |= (1 << WGM12) 
 		    | (1 << WGM13);
@@ -142,7 +145,8 @@ void InitializeTimer1(void)
 	
 	ICR1 = 16000-1;				// 4. 16MHz/16000 = 1KHz 
 	
-	
+	//overflow interrupt enable
+	TIMSK |= (1<<TOIE1);
 }
 
 

@@ -7,8 +7,14 @@
 #include "servoMove.h"
 #include "stepMove.h"
 
+int state = 0;
 
 ISR(TIMER1_OVF_vect) {
+	state = !state;
+	
+	if(state) PORTC |= (1 << PORTC7);
+	else PORTC &= ~(1 << PORTC7);
+	
 	if(h_ms != -1) h_ms--;
 	if(v_ms != -1) v_ms--;
 	
@@ -22,6 +28,13 @@ ISR(TIMER1_OVF_vect) {
 	}
 }
 
+ISR(TIMER1__vect) {
+	state = !state;
+	
+	if(state) PORTC |= (1 << PORTC7);
+	else PORTC &= ~(1 << PORTC7);
+}
+
 
 int main(void)
 {
@@ -33,9 +46,11 @@ int main(void)
 	PORTC &= ~(1 << PORTC0);//PORTC2 low : enable motor driver
 	PORTC &= ~(1 << PORTC4);//PORTC4 low : enable motor driver
 	
-	//PORTC5 == 1 : left   PORTC5 == 0 : right,
-	//
+	DDRC |= (1 << PORTC7);
 	
+	//PORTC5 == 1 : left   PORTC5 == 0 : right,
+	
+
 	InitializeTimer0();
 	InitializeTimer2();//PTB7을 OC2 핀으로 사용 OC1C 핀과 겹칩 주의
 	InitializeTimer3();
@@ -44,31 +59,55 @@ int main(void)
 	TIMSK |= (1<<TOIE1); //T/C1 overflow interrupt enable
 	
 	sei();
+	PORTA &= ~(1 << PORTA0);
 	_delay_ms(5000);
 	
+	
+	PWMSet_TC3(3, 8.1);
+	PWMSet_TC3(2, 8);
+	PWMSet_TC3(1, 7);
 
+	MoveDown(300);
+	_delay_ms(10000);
+	
+	
 	while(1) {
-		MoveXY_absolute(100,100);
+		
+		MoveXY_relative(100,100);
 		pauseUntilStop();
-		_delay_ms(3000);
-		
-		MoveXY_absolute(400,400);
+		_delay_ms(5000);
 		
 		
+		MoveXY_relative(-100,-100);
 		pauseUntilStop();
-		_delay_ms(3000);
+		_delay_ms(5000);
 		
-		MoveXY_absolute(200,600);
+		MoveXY_relative(200,200);
 		pauseUntilStop();
-		_delay_ms(3000);
+		_delay_ms(5000);
+		
+		MoveXY_relative(-200,-200);
+		pauseUntilStop();
+		_delay_ms(5000);
+		
+		
+		MoveXY_absolute(200,200);
+		pauseUntilStop();
+		_delay_ms(5000);
+		
+		MoveXY_absolute(300,300);
+		pauseUntilStop();
+		_delay_ms(5000);
+		
+		MoveXY_absolute(0,0);
+		pauseUntilStop();
+		_delay_ms(5000);
 	}
 	
 	return 0;
 }
 /*
-PWMSet_TC3(3, 8.1);
-PWMSet_TC3(2, 8);
-PWMSet_TC3(1, 7);
+
 
 
 

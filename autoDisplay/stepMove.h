@@ -88,27 +88,42 @@ void MoveDown(int mm) {
 }
 
 void MoveXY_relative(int x_mm, int y_mm) {
+	curX += x_mm;
+	curY += y_mm;
+	
 	if(x_mm >= 0) PORTC &= ~(1<<PORTC5);
-	else PORTC |= (1<<PORTC5);
+	else {
+		PORTC |= (1<<PORTC5);
+		x_mm = -x_mm;
+	}
 	
 	if(y_mm >= 0) PORTC &= ~(1<<PORTC1);
-	else PORTC |= (1<<PORTC1);
+	else {
+		PORTC |= (1<<PORTC1);
+		y_mm = -y_mm;
+	}
 	
+	//stopFlag를 0으로 만들자마자 OVF interrupt 작동하는 것 방지
+	TCNT1 = 0;
 	h_stopFlag = 0;
 	v_stopFlag = 0;
 	
+	//여기서부터 요이~땅
 	TCNT1 = 0;
-	horizontalMove();
-	verticalMove();
 	h_ms = x_mm*10;
 	v_ms = y_mm*25;
-	curX += x_mm;
-	curY += y_mm;
+	horizontalMove();
+	verticalMove();
+	
+	
 }
 
 void MoveXY_absolute(unsigned int dstX, unsigned int dstY) {
 	int Xdistance = dstX-curX;
 	int Ydistance = dstY-curY;
+	
+	curX = dstX;
+	curY = dstY;
 	
 	if(Xdistance >= 0) PORTC &= ~(1<<PORTC5);
 	else {
@@ -122,20 +137,22 @@ void MoveXY_absolute(unsigned int dstX, unsigned int dstY) {
 		Ydistance = -Ydistance;
 	}
 	
+	//stopFlag를 0으로 만들자마자 OVF interrupt 작동하는 것 방지
+	TCNT1 = 0;
 	h_stopFlag = 0;
 	v_stopFlag = 0;
 	
+	//여기서부터 요이~땅
 	TCNT1 = 0;
 	horizontalMove();
 	verticalMove();
 	h_ms = Xdistance*10;
 	v_ms = Ydistance*25;
-	curX = dstX;
-	curY = dstY;
+	
 }
 
 void pauseUntilStop(void) {
-	while(h_stopFlag == 1 || v_stopFlag == 1) {};
+	while(h_stopFlag == 0 || v_stopFlag == 0) {};
 }
 
 		/*horizontalMove()
@@ -148,12 +165,7 @@ void pauseUntilStop(void) {
 		/*verticalMove()
 		 *_delay_ms(1000): 40mm(예상)
 		 *_delay_ms(2000): 80mm
-		 * 가로축 이동가능 전장 560mm 5600ms
+		 * 세로축 최대 이동가능 전장 710mm 17750ms 
 		 */
-		
-		//가로축 이동가능 전장 560mm 5600ms
-		//가로축 최대 이동가능 전장 710mm 17750ms 
-
-
 
 #endif /* STEPMOVE_H_ */
