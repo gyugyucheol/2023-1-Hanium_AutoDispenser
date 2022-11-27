@@ -36,12 +36,12 @@ void basePoseArm(void) {
 }
 
 void freePoseArm(void) {
-	OCR3A = 2000*4;
-	OCR3B = 2000*4;
-	OCR3C = 2000*4;
+	OCR3A = 3000*4;
+	OCR3B = 3000*4;
+	OCR3C = 3000*4;
 }
 
-void closeHand_thin(void){
+void closeHand(void){
 	OCR3A = 800*4;
 }
 
@@ -55,7 +55,7 @@ void holdHand_thin(void) {
 }
 
 void openHand(void) {
-	OCR3A = 1000*4;
+	OCR3A = 950*4;
 }
 
 void wideOpenHand(void) {
@@ -68,7 +68,7 @@ void CWturnWrist(void) {
 }
 
 void normalWrist(void) {
-	OCR3B = 300*4;
+	OCR3B = 800*4;
 }
 
 void CCWturnWrist(void) {

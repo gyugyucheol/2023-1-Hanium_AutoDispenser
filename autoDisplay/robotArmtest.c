@@ -21,10 +21,10 @@ int wronginput=0;
 unsigned int hand,  wrist, elbow;
 
 int XlocArr[4][9] = {
-	{ 50, 120, 200, 270, 350, 425, 500, 500, 500},
-	{ 40, 105, 175, 240, 305, 365, 440, 510, 510,},
-	{ 40, 105, 175, 240, 305, 365, 440, 510, 510,},
-	{ 40, 105, 175, 240, 305, 365, 440, 510, 510,},
+	{ 30, 110, 185, 260, 335, 420, 480, 550, 550},
+	{ 25,  95, 160, 230, 295, 365, 430, 495, 550},
+	{ 25,  95, 160, 230, 295, 365, 430, 495, 550},
+	{ 25,  95, 160, 230, 295, 365, 430, 495, 550},
 };
 int YlocArr[4] = {50, 280, 510, 710};
 
@@ -116,6 +116,8 @@ void automode(void) {
 	
 	int quit = 0;
 	
+	setHereas00();
+	
 	while(1) {
 		do{
 			quit = 0;
@@ -157,7 +159,7 @@ void automode(void) {
 		
 		//시작 준비------------------------------------------------
 		basePoseArm();
-		_delay_ms(1000);
+		_delay_ms(500);
 		//---------------------------------------------------------
 		
 		//음료수 잡기-----------------------------------------------
@@ -180,7 +182,7 @@ void automode(void) {
 		MoveXY_relative(100, 0);
 		pauseUntilStop();
 		_delay_ms(300);
-		//----------------------------------------------------------
+		//-----------------------------------------------------------
 		
 		//지정된 좌표로 이동 및 안쪽으로 팔 집어넣음--------------------
 		if(XlocArr[row][column] <= 250) {
@@ -189,11 +191,10 @@ void automode(void) {
 			_delay_ms(500);
 			
 			CWturnWrist();
-			_delay_ms(1000);
+			_delay_ms(500);
 			innerTurnElbow();
-			_delay_ms(1000);
-			holdHand_thin();
-			_delay_ms(1000);
+			_delay_ms(800);
+			
 			
 			MoveXY_absolute(XlocArr[row][column], YlocArr[row]);
 			pauseUntilStop();
@@ -204,54 +205,51 @@ void automode(void) {
 			_delay_ms(500);
 			
 			CWturnWrist();
-			_delay_ms(1000);
+			_delay_ms(500);
 			innerTurnElbow();
-			_delay_ms(1000);
-			holdHand_thin();
-			_delay_ms(1000);
+			_delay_ms(800);
 		}
 		//---------------------------------------------------------
 		
 		//살짝 내려놓음---------------------------------------------
+		holdHand_thin();
+		_delay_ms(100);
 		MoveXY_relative(0, -50);
 		pauseUntilStop();
-		_delay_ms(1000);
+		_delay_ms(300);
 		
-		wideOpenHand();
+		openHand();
 		_delay_ms(2000);
 		
 		MoveXY_relative(0, 50);
 		pauseUntilStop();
-		_delay_ms(1000);
+		_delay_ms(300);
 		//----------------------------------------------------------
 		
 		//팔 뻄-----------------------------------------------------
 		if(XlocArr[row][column] <= 250) {
 			MoveXY_absolute(250, YlocArr[row]);
 			pauseUntilStop();
-			_delay_ms(1000);
+			_delay_ms(300);
 		}
 		
-		closeHand_thin();
-		_delay_ms(1000);
+		closeHand();
+		_delay_ms(200);
 		
 		normalTurnElbow();
+		_delay_ms(200);
 		normalWrist();
-		_delay_ms(1000);
+		_delay_ms(500);
 		//----------------------------------------------------------
 		
 		//복귀------------------------------------------------------
-		MoveXY_absolute(250, 150);
-		pauseUntilStop();
-		MoveXY_absolute(0, 0);
-		pauseUntilStop();
 		//---------------------------------------------------------
 	}
 }
 
 void manualmode(void) {
-	PORTC |= (1 << PORTC0);//PORTC0 low : disable vertical motor
-	PORTC |= (1 << PORTC4);//PORTC4 low : disable horizontal motor
+	set_V_Disable();//PORTC0 low : disable vertical motor
+	set_H_Disable();//PORTC4 low : disable horizontal motor
 	freePoseArm();
 	
 	while(1) {
@@ -261,24 +259,24 @@ void manualmode(void) {
 		if(strcasecmp(uartBuffer, "1")==0) {
 			printf("ready?(any word) : ");
 			scanf("%s",uartBuffer);
-			PORTC &= ~(1 << PORTC0);
-			PORTC &= ~(1<<PORTC1);
-			verticalMove();
+			set_V_Enable();
+			set_V_Up();
+			V_MoveStart();
 			printf("stop(any word) : ");
 			scanf("%s",uartBuffer);
-			verticalStop();
-			PORTC |= (1 << PORTC0);
+			V_MoveStop();
+			set_V_Disable();
 		}
 		else if (strcasecmp(uartBuffer, "2")==0){
 			printf("ready?(any word) : ");
 			scanf("%s",uartBuffer);
-			PORTC &= ~(1 << PORTC0);
-			PORTC |= (1<<PORTC1);
-			verticalMove();
+			set_V_Enable();
+			set_V_Down();
+			V_MoveStart();
 			printf("stop(any word) : ");
 			scanf("%s",uartBuffer);
-			verticalStop();
-			PORTC |= (1 << PORTC0);
+			V_MoveStop();
+			set_V_Disable();
 		}
 		else if (strcasecmp(uartBuffer, "q")==0)
 			break;
@@ -288,8 +286,8 @@ void manualmode(void) {
 	
 	basePoseArm();
 	
-	PORTC &= ~(1 << PORTC0);//PORTC0 low : enable vertical motor
-	PORTC &= ~(1 << PORTC4);//PORTC4 low : enable horizontal motor
+	set_V_Enable();//PORTC0 low : enable vertical motor
+	set_H_Enable();//PORTC4 low : enable horizontal motor
 }
 
 void setHereas00(void) {
@@ -298,9 +296,10 @@ void setHereas00(void) {
 
 ISR(INT0_vect) {//emergency switch
 	freePoseArm();
+	printf("\r\n\r\n!!!!INT0 set!!!!!\r\n\r\n");
 	
-	PORTC |= (1 << PORTC0);//PORTC0 low : disable vertical motor
-	PORTC |= (1 << PORTC4);//PORTC4 low : disable horizontal motor
+	//set_V_Disable();//PORTC0 low : disable vertical motor
+	//set_H_Disable();//PORTC4 low : disable horizontal motor
 }
 
 ISR(TIMER1_OVF_vect) {
@@ -308,11 +307,11 @@ ISR(TIMER1_OVF_vect) {
 	if(v_ms != -1) v_ms--;
 	
 	if(h_ms == 0) {
-		horizontalStop();
+		H_MoveStop();
 		h_stopFlag = 1;
 	}
 	if(v_ms == 0) {
-		verticalStop();
+		V_MoveStop();
 		v_stopFlag = 1;
 	}
 }
@@ -320,12 +319,13 @@ ISR(TIMER1_OVF_vect) {
 
 int main(void)
 {
-	DDRC |= (1 << PORTC0) | (1 << PORTC1);//vertical, PORTC0 : EN, PORTC1 : CW;
-	DDRC |= (1 << PORTC4) | (1 << PORTC5);//horizontal, PORTC4 : EN, PORTC5 : CW;
+	DDRB |= (1 << PORTB2) | (1 << PORTB3);//vertical, PORTB2 : EN, PORTB3 : CW;
+	DDRB |= (1 << PORTB5) | (1 << PORTB6);//horizontal, PORTB5 : EN, PORTB6 : CW;
 
-	PORTC &= ~(1 << PORTC0);//PORTC0 low : enable vertical motor
-	PORTC &= ~(1 << PORTC4);//PORTC4 low : enable horizontal motor
+	PORTB &= ~(1 << PORTB2);//PORTC0 low : enable vertical motor
+	PORTB &= ~(1 << PORTB5);//PORTC4 low : enable horizontal motor
 
+	//T/C enable
 	InitializeTimer0();//vertical step motor PWM channel
 	InitializeTimer2();//horizontal step motor PWM channel
 	InitializeTimer3();//robot arm servo motor PWM channel
@@ -333,6 +333,7 @@ int main(void)
 	InitializeTimer1();//user timer
 	TIMSK |= (1<<TOIE1); //T/C1 overflow interrupt enable
 	
+	//emergency button interrupt enable
 	DDRD &= ~(1<<PORTD0);
 	PORTD |= (1<<PORTD0);
 	EIMSK |= (1<<INT0);
