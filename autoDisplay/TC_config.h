@@ -159,6 +159,7 @@ void InitializeTimer3(void)
 	TCCR3A |= (1 << WGM31);
 	TCCR3B |= (1 << WGM32) 
 	        | (1 << WGM33);
+			
 	
 	//2. 파형 출력 모드 : 고속PWM에서 비반전 모드([COMnA1, COMnA0] = [1, 0])
 	//비교 일치가 발생하면 OCnA 핀의 출력은 LOW값으로 바뀌고, BOTTOM에서 HIGH값으로 바뀐다(비반전 모드)

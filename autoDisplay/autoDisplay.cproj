@@ -148,18 +148,15 @@
     <Compile Include="TC_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <None Include="23_4test.c">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="timer_delay.c">
-      <SubType>compile</SubType>
-    </None>
     <Compile Include="robotArmtest.c">
       <SubType>compile</SubType>
     </Compile>
-    <None Include="verticalmovetest.c">
+    <Compile Include="UART1.c">
       <SubType>compile</SubType>
-    </None>
+    </Compile>
+    <Compile Include="UART1.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

@@ -20,6 +20,7 @@ int v_stopFlag = 1;
 
 //200mm 움직여봤는데 생가보다 오차가 크지 않다! 2mm 내외
 //사용할만 함
+
 void Mydelay_ms(unsigned int mySecond){
 	while(mySecond > 0){
 		_delay_ms(1);
@@ -103,17 +104,18 @@ void MoveXY_relative(int x_mm, int y_mm) {
 		y_mm = -y_mm;
 	}
 	
-	//stopFlag를 0으로 만들자마자 OVF interrupt 작동하는 것 방지
-	TCNT1 = 0;
-	h_stopFlag = 0;
-	v_stopFlag = 0;
-	
 	//여기서부터 요이~땅
 	TCNT1 = 0;
+	if(x_mm) {
+		horizontalMove();
+		h_stopFlag = 0;
+	}
+	if(y_mm) {
+		verticalMove();
+		v_stopFlag = 0;
+	}
 	h_ms = x_mm*10;
 	v_ms = y_mm*25;
-	horizontalMove();
-	verticalMove();
 	
 	
 }
@@ -137,15 +139,16 @@ void MoveXY_absolute(unsigned int dstX, unsigned int dstY) {
 		Ydistance = -Ydistance;
 	}
 	
-	//stopFlag를 0으로 만들자마자 OVF interrupt 작동하는 것 방지
-	TCNT1 = 0;
-	h_stopFlag = 0;
-	v_stopFlag = 0;
-	
 	//여기서부터 요이~땅
 	TCNT1 = 0;
-	horizontalMove();
-	verticalMove();
+	if(Xdistance){
+		horizontalMove();
+		h_stopFlag = 0;
+	}
+	if(Ydistance){
+		verticalMove();
+		v_stopFlag = 0;
+	}
 	h_ms = Xdistance*10;
 	v_ms = Ydistance*25;
 	
