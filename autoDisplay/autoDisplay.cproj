@@ -139,19 +139,37 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="oldCode.h">
+    <Compile Include="global_variable.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="oldCode.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="operationMode.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="operationMode.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="servoMove.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="servoMove.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="stepMove.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="stepMove.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TC_config.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="TC_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="robotArmtest.c">
+    <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="UART1.c">

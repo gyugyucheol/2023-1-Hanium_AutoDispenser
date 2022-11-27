@@ -2,7 +2,15 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-robotArmtest.c
+operationMode.c
+
+servoMove.c
+
+stepMove.c
+
+TC_config.c
+
+main.c
 
 UART1.c
 
