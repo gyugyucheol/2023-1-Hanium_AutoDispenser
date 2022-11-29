@@ -1,4 +1,4 @@
-/*
+﻿/*
  * TC_config.c
  *
  * Created: 11/28/2022 7:02:07 AM
@@ -28,7 +28,7 @@ void InitializeTimer0(void) {//??? PWM: PTB4
 	/*------OCR value-------------------------------
 	OCR0 = 125 is best for now
 	no below OCR0 = 100(2500Hz)
-	??? ???? ???? ?? Microstep2, ?? clock 2.5kHz 50%PWM ?? ????. 
+	Microstep2, clock 2.5kHz 50%PWM 이상에서 안됨
 	-----------------------------------------------*/
 }
 
@@ -56,18 +56,17 @@ void InitializeTimer2(void) {//??? PWM: PTB7
 	/*------OCR value-------------------------------
 	OCR2 = 125 is best for now
 	no below OCR2 = 100(1250Hz)
-	??? ???? ???? ?? Microstep2, ?? clock 1.4kHz 50%PWM ?? ????.
+	 Microstep2, clock 1.4kHz 50%PWM 이상에서 안됨
 	-----------------------------------------------*/
 
 }
 
-//OC1C? OC2 ?? ???? ?? ??
+//OC1C와 OC2 핀 겹칩 주의
 void InitializeTimer1(void)
 {
-	//(?? ?? ??)
 	//DDRB |= (1 << PORTB5) | (1 << PORTB6);
 	
-	//1. top?? ICRn? ??PWM?? ([WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0])
+	//1. 고속 PWM 모드 ([WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0])
 	/*						TOP		update		TOVn Flag set
 	 * 12: CTC mode			ICRn	immediate	MAX(0xFFFF)
 	 * 14: fast PWM mode	ICRn	BOTTOM		TOP
@@ -76,8 +75,8 @@ void InitializeTimer1(void)
 	TCCR1B |= (1 << WGM12) 
 		    | (1 << WGM13);
 	
-	// 2. ?? ?? ?? : ??(?? ?? ??)
-	/*//default?? ??
+	// 2. 기본설정으로 OC1A, OC1B, OC1C를 GPIO로 사용
+	/*
 	TCCR3A &= ~(1 << COM3A0);
 	TCCR3A &= ~(1 << COM3A1);
 	
@@ -102,14 +101,14 @@ void InitializeTimer3(void)
 {
 	DDRE |= (1 << PORTE3) | (1 << PORTE4) | (1 << PORTE5);
 	
-	//1. top?? ICRn? ??PWM?? ([WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0])
+	//1. 고속 PWM 모드 ([WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0])
 	TCCR3A |= (1 << WGM31);
 	TCCR3B |= (1 << WGM32) 
 	        | (1 << WGM33);
 			
 	
-	//2. ?? ?? ?? : ??PWM?? ??? ??([COMnA1, COMnA0] = [1, 0])
-	//?? ??? ???? OCnA ?? ??? LOW??? ???, BOTTOM?? HIGH??? ???(??? ??)
+	//2. ([COMnA1, COMnA0] = [1, 0])
+	//비교 일치가 발생하기 전에 HIGH 비교 일치가 발생하면 LOW
 	TCCR3A &= ~(1 << COM3A0);
 	TCCR3A |= (1 << COM3A1);
 	
@@ -126,7 +125,5 @@ void InitializeTimer3(void)
 	OCR3B = 40000;
 	OCR3C = 40000;
 	
-	//ICR ??? 0
 	ICR3 = 40000-1;				// 4. 2MHz/40000 = 50Hz
-	//? ??? timer ??
 }

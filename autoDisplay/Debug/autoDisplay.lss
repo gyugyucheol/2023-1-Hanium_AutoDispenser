@@ -19,7 +19,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   7 .debug_abbrev 00000e02  00000000  00000000  00004955  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000012af  00000000  00000000  00005757  2**0
+  8 .debug_line   000012ae  00000000  00000000  00005757  2**0
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  0000053c  00000000  00000000  00006a08  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -1156,7 +1156,7 @@ void automode(void) {
      6a2:	fc 01       	movw	r30, r24
      6a4:	ee 0f       	add	r30, r30
 		
-		//?? ??------------------------------------------------
+		//시작 준비------------------------------------------------
 		printf("location : [%u,%u]\r\n", XlocArr[row][column],  YlocArr[row]);
      6a6:	ff 1f       	adc	r31, r31
      6a8:	ec 5e       	subi	r30, 0xEC	; 236
@@ -1206,7 +1206,7 @@ void automode(void) {
 		_delay_ms(500);
 		//---------------------------------------------------------
 		
-		//??? ??-----------------------------------------------
+		//음료수 집음-----------------------------------------------
 		MoveXY_absolute(140, 210);
      6fc:	62 ed       	ldi	r22, 0xD2	; 210
      6fe:	70 e0       	ldi	r23, 0x00	; 0
@@ -1304,7 +1304,7 @@ void automode(void) {
 		_delay_ms(100);
 		//-----------------------------------------------------------
 		
-		//??? ??? ?? ? ???? ? ????--------------------
+		//음료수 집은 후 지정된 위치로 이동--------------------
 		if(XlocArr[row][column] <= 250) {
      794:	ee 0f       	add	r30, r30
      796:	ff 1f       	adc	r31, r31
@@ -1475,7 +1475,7 @@ void automode(void) {
 		}
 		//---------------------------------------------------------
 		
-		//?? ????---------------------------------------------
+		//음료수 놓음---------------------------------------------
 		holdHand_thin();
      8b4:	d4 d0       	rcall	.+424    	; 0xa5e <holdHand_thin>
      8b6:	9f ef       	ldi	r25, 0xFF	; 255
@@ -1543,7 +1543,7 @@ void automode(void) {
 		_delay_ms(200);
 		//----------------------------------------------------------
 		
-		//? ?-----------------------------------------------------
+		//팔 뺌-----------------------------------------------------
 		if(XlocArr[row][column] <= 250) {
      91e:	ee 0f       	add	r30, r30
      920:	ff 1f       	adc	r31, r31
@@ -1636,7 +1636,7 @@ void automode(void) {
      9b8:	cf 91       	pop	r28
 		//----------------------------------------------------------
 		
-		//??------------------------------------------------------
+		//종료------------------------------------------------------
 		//---------------------------------------------------------
 	}
 }
@@ -1850,7 +1850,6 @@ void set_H_Left() {
 
 
 void V_MoveStart(void) {
-	//???? ??? ? ??
 	TCCR0 |= (1 << COM00);
      af2:	83 b7       	in	r24, 0x33	; 51
      af4:	80 61       	ori	r24, 0x10	; 16
@@ -1865,7 +1864,6 @@ void V_MoveStart(void) {
 }
 
 void V_MoveStop(void) {
-	//???? ??? ? LOW
 	TCCR0 &= ~(1 << COM00);
      b00:	83 b7       	in	r24, 0x33	; 51
      b02:	8f 7e       	andi	r24, 0xEF	; 239
@@ -1880,7 +1878,7 @@ void V_MoveStop(void) {
 }
 
 void H_MoveStart(void) {
-	//???? ??? ? ??
+	
 	TCCR2 |= (1 << COM20);
      b0e:	85 b5       	in	r24, 0x25	; 37
      b10:	80 61       	ori	r24, 0x10	; 16
@@ -1895,7 +1893,6 @@ void H_MoveStart(void) {
 }
 
 void H_MoveStop(void) {
-	//???? ??? ? LOW
 	TCCR2 &= ~(1 << COM20);
      b1c:	85 b5       	in	r24, 0x25	; 37
      b1e:	8f 7e       	andi	r24, 0xEF	; 239
@@ -1961,8 +1958,7 @@ void MoveXY_relative(int x_mm, int y_mm) {
      b7c:	11 09       	sbc	r17, r1
      b7e:	1d bc       	out	0x2d, r1	; 45
 	}
-	
-	//????? ??~?
+
 	TCNT1 = 0;
      b80:	1c bc       	out	0x2c, r1	; 44
 	if(x_mm) {
@@ -2080,7 +2076,6 @@ void MoveXY_absolute(unsigned int dstX, unsigned int dstY) {
      c40:	1d bc       	out	0x2d, r1	; 45
 	}
 	
-	//????? ??~?
 	TCNT1 = 0;
      c42:	1c bc       	out	0x2c, r1	; 44
 	if(Xdistance){
@@ -2238,7 +2233,7 @@ void InitializeTimer2(void) {//??? PWM: PTB7
      d12:	08 95       	ret
 
 00000d14 <InitializeTimer1>:
-	//1. top?? ICRn? ??PWM?? ([WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0])
+	//1. 고속 PWM 모드 ([WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0])
 	/*						TOP		update		TOVn Flag set
 	 * 12: CTC mode			ICRn	immediate	MAX(0xFFFF)
 	 * 14: fast PWM mode	ICRn	BOTTOM		TOP
@@ -2285,7 +2280,7 @@ void InitializeTimer3(void)
      d38:	88 63       	ori	r24, 0x38	; 56
      d3a:	82 b9       	out	0x02, r24	; 2
 	
-	//1. top?? ICRn? ??PWM?? ([WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0])
+	//1. 고속 PWM 모드 ([WGMn3, WGMn2, WGMn1, WGMn0] = [1,1,1,0])
 	TCCR3A |= (1 << WGM31);
      d3c:	eb e8       	ldi	r30, 0x8B	; 139
      d3e:	f0 e0       	ldi	r31, 0x00	; 0
@@ -2301,8 +2296,8 @@ void InitializeTimer3(void)
 	        | (1 << WGM33);
 			
 	
-	//2. ?? ?? ?? : ??PWM?? ??? ??([COMnA1, COMnA0] = [1, 0])
-	//?? ??? ???? OCnA ?? ??? LOW??? ???, BOTTOM?? HIGH??? ???(??? ??)
+	//2. ([COMnA1, COMnA0] = [1, 0])
+	//비교 일치가 발생하기 전에 HIGH 비교 일치가 발생하면 LOW
 	TCCR3A &= ~(1 << COM3A0);
      d50:	80 81       	ld	r24, Z
      d52:	8f 7b       	andi	r24, 0xBF	; 191
@@ -2348,7 +2343,6 @@ void InitializeTimer3(void)
      d8e:	90 93 83 00 	sts	0x0083, r25	; 0x800083 <__TEXT_REGION_LENGTH__+0x7e0083>
      d92:	80 93 82 00 	sts	0x0082, r24	; 0x800082 <__TEXT_REGION_LENGTH__+0x7e0082>
 	
-	//ICR ??? 0
 	ICR3 = 40000-1;				// 4. 2MHz/40000 = 50Hz
      d96:	8f e3       	ldi	r24, 0x3F	; 63
      d98:	9c e9       	ldi	r25, 0x9C	; 156

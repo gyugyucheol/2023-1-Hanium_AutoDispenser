@@ -777,15 +777,15 @@ END GROUP
  .debug_abbrev  0x00000ab3      0x236 main.o
  .debug_abbrev  0x00000ce9      0x119 UART1.o
 
-.debug_line     0x00000000     0x12af
+.debug_line     0x00000000     0x12ae
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x16a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega128a/avr51/crtatmega128a.o
  .debug_line    0x0000016a      0x5fd operationMode.o
  .debug_line    0x00000767      0x227 servoMove.o
- .debug_line    0x0000098e      0x327 stepMove.o
- .debug_line    0x00000cb5      0x198 TC_config.o
- .debug_line    0x00000e4d      0x2a4 main.o
- .debug_line    0x000010f1      0x1be UART1.o
+ .debug_line    0x0000098e      0x326 stepMove.o
+ .debug_line    0x00000cb4      0x198 TC_config.o
+ .debug_line    0x00000e4c      0x2a4 main.o
+ .debug_line    0x000010f0      0x1be UART1.o
 
 .debug_frame    0x00000000      0x53c
  *(.debug_frame)

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * global_variable.h
  *
  * Created: 11/28/2022 6:29:34 AM

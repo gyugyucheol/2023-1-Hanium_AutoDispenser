@@ -1,4 +1,4 @@
-/*
+﻿/*
  * oldCode.h
  *
  * Created: 11/27/2022 11:44:02 PM
@@ -11,8 +11,8 @@
 
 
 //linear rail move with _delay_ms
-//200mm ?????? ???? ??? ?? ??! 2mm ??
-//???? ?
+//200mm 이동했는데 2mm 오차남
+//쓸만한 듯!
 void Mydelay_ms(unsigned int mySecond){
 	while(mySecond > 0){
 		_delay_ms(1);

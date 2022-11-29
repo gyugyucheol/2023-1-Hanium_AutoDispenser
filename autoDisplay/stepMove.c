@@ -1,4 +1,4 @@
-/*
+﻿/*
  * stepMove.c
  *
  * Created: 11/28/2022 6:22:48 AM
@@ -38,25 +38,22 @@ void set_H_Left() {
 
 
 void V_MoveStart(void) {
-	//???? ??? ? ??
 	TCCR0 |= (1 << COM00);
 	TCCR0 &= ~(1 << COM01);
 }
 
 void V_MoveStop(void) {
-	//???? ??? ? LOW
 	TCCR0 &= ~(1 << COM00);
 	TCCR0 |= (1 << COM01);
 }
 
 void H_MoveStart(void) {
-	//???? ??? ? ??
+	
 	TCCR2 |= (1 << COM20);
 	TCCR2 &= ~(1 << COM21);
 }
 
 void H_MoveStop(void) {
-	//???? ??? ? LOW
 	TCCR2 &= ~(1 << COM20);
 	TCCR2 |= (1 << COM21);
 }
@@ -78,8 +75,7 @@ void MoveXY_relative(int x_mm, int y_mm) {
 		set_V_Down();
 		y_mm = -y_mm;
 	}
-	
-	//????? ??~?
+
 	TCNT1 = 0;
 	if(x_mm) {
 		H_MoveStart();
@@ -114,7 +110,6 @@ void MoveXY_absolute(unsigned int dstX, unsigned int dstY) {
 		Ydistance = -Ydistance;
 	}
 	
-	//????? ??~?
 	TCNT1 = 0;
 	if(Xdistance){
 		H_MoveStart();

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * operationMode.h
  *
  * Created: 11/28/2022 6:38:10 AM
