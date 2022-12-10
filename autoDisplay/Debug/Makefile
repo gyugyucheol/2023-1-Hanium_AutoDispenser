@@ -42,6 +42,7 @@ C_SRCS +=  \
 ../stepMove.c \
 ../TC_config.c \
 ../main.c \
+../UART0.c \
 ../UART1.c
 
 
@@ -57,6 +58,7 @@ servoMove.o \
 stepMove.o \
 TC_config.o \
 main.o \
+UART0.o \
 UART1.o
 
 OBJS_AS_ARGS +=  \
@@ -65,6 +67,7 @@ servoMove.o \
 stepMove.o \
 TC_config.o \
 main.o \
+UART0.o \
 UART1.o
 
 C_DEPS +=  \
@@ -73,6 +76,7 @@ servoMove.d \
 stepMove.d \
 TC_config.d \
 main.d \
+UART0.d \
 UART1.d
 
 C_DEPS_AS_ARGS +=  \
@@ -81,6 +85,7 @@ servoMove.d \
 stepMove.d \
 TC_config.d \
 main.d \
+UART0.d \
 UART1.d
 
 OUTPUT_FILE_PATH +=autoDisplay.elf
@@ -126,6 +131,13 @@ LINKER_SCRIPT_DEP+=
 	
 
 ./main.o: .././main.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega128a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega128a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./UART0.o: .././UART0.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega128a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega128a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

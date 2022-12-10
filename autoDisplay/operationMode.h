@@ -9,9 +9,11 @@
 #ifndef OPERATIONMODE_H_
 #define OPERATIONMODE_H_
 
-void testmode(void);
-void automode(void);
-void manualmode(void);
+void testMode(void);
+void manualFulfillMode(void);
+void manualMode(void);
+void fulfill(int row, int column);
 void setHereas00(void);
+void autoFulfillMode(void);
 
 #endif /* OPERATIONMODE_H_ */

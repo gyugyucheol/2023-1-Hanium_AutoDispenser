@@ -12,5 +12,7 @@ TC_config.c
 
 main.c
 
+UART0.c
+
 UART1.c
 

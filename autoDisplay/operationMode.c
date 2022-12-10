@@ -11,11 +11,17 @@
 #include "global_variable.h"
 #include "operationMode.h"
 
+#include <avr/io.h>
+#include <stdio.h>
+#include "UART0.h"
+#include "UART1.h"
 
+extern FILE OUTPUT;
+extern FILE INPUT;
 
 char uartBuffer[20] = "0";
 
-void testmode() {
+void testMode() {
 	int quit = 0;
 	int wronginput=0;
 	int testModeSelect;
@@ -102,7 +108,7 @@ void testmode() {
 	}
 }
 
-void automode(void) {
+void manualFulfillMode(void) {
 	unsigned int row;
 	unsigned int column;
 	
@@ -124,7 +130,7 @@ void automode(void) {
 				printf("r");
 				printf("\r\n");
 				printf("(forUser)worng input");
-				printf("(forUser)@@quit for row == 4@@\r\n");
+				printf("(forUser)quit for row == 4\r\n");
 				printf("(forUser)waiting for [row,column] : ");
 				scanf("%u,%u", &row, &column);
 			}
@@ -153,96 +159,100 @@ void automode(void) {
 		//시작 준비------------------------------------------------
 		printf("location : [%u,%u]\r\n", XlocArr[row][column],  YlocArr[row]);
 		
-		basePoseArm();
-		_delay_ms(500);
-		//---------------------------------------------------------
-		
-		//음료수 집음-----------------------------------------------
-		MoveXY_absolute(140, 210);
-		pauseUntilStop();
-		_delay_ms(500);
-		
-		openHand();
-		
-		MoveXY_absolute(0, 210);
-		pauseUntilStop();
-		_delay_ms(200);
-		
-		catchHand_thin();
-		_delay_ms(200);
-		
-		MoveXY_relative(0, 40);
-		pauseUntilStop();
-		_delay_ms(100);
-		MoveXY_relative(100, 0);
-		pauseUntilStop();
-		_delay_ms(100);
-		//-----------------------------------------------------------
-		
-		//음료수 집은 후 지정된 위치로 이동--------------------
-		if(XlocArr[row][column] <= 250) {
-			MoveXY_absolute(250, YlocArr[row]);
-			pauseUntilStop();
-			_delay_ms(200);
-			
-			CWturnWrist();
-			_delay_ms(500);
-			innerTurnElbow();
-			_delay_ms(500);
-			
-			
-			MoveXY_absolute(XlocArr[row][column], YlocArr[row]);
-			pauseUntilStop();
-			_delay_ms(200);
-			} else {
-			MoveXY_absolute(XlocArr[row][column], YlocArr[row]);
-			pauseUntilStop();
-			_delay_ms(200);
-			
-			CWturnWrist();
-			_delay_ms(500);
-			innerTurnElbow();
-			_delay_ms(500);
-		}
-		//---------------------------------------------------------
-		
-		//음료수 놓음---------------------------------------------
-		holdHand_thin();
-		_delay_ms(100);
-		MoveXY_relative(0, -50);
-		pauseUntilStop();
-		_delay_ms(200);
-		
-		openHand();
-		_delay_ms(1500);
-		
-		MoveXY_relative(0, 50);
-		pauseUntilStop();
-		_delay_ms(200);
-		//----------------------------------------------------------
-		
-		//팔 뺌-----------------------------------------------------
-		if(XlocArr[row][column] <= 250) {
-			MoveXY_absolute(250, YlocArr[row]);
-			pauseUntilStop();
-			_delay_ms(200);
-		}
-		
-		closeHand();
-		_delay_ms(200);
-		
-		normalTurnElbow();
-		_delay_ms(500);
-		normalWrist();
-		_delay_ms(500);
-		//----------------------------------------------------------
-		
-		//종료------------------------------------------------------
-		//---------------------------------------------------------
+		fulfill(row, column);
 	}
 }
 
-void manualmode(void) {
+void fulfill(int row, int column) {
+	basePoseArm();
+	_delay_ms(500);
+	//---------------------------------------------------------
+	
+	//음료수 집음-----------------------------------------------
+	MoveXY_absolute(140, 210);
+	pauseUntilStop();
+	_delay_ms(500);
+	
+	openHand();
+	
+	MoveXY_absolute(0, 210);
+	pauseUntilStop();
+	_delay_ms(200);
+	
+	catchHand_thin();
+	_delay_ms(200);
+	
+	MoveXY_relative(0, 40);
+	pauseUntilStop();
+	_delay_ms(100);
+	MoveXY_relative(100, 0);
+	pauseUntilStop();
+	_delay_ms(100);
+	//-----------------------------------------------------------
+	
+	//음료수 집은 후 지정된 위치로 이동--------------------
+	if(XlocArr[row][column] <= 250) {
+		MoveXY_absolute(250, YlocArr[row]);
+		pauseUntilStop();
+		_delay_ms(200);
+		
+		CWturnWrist();
+		_delay_ms(500);
+		innerTurnElbow();
+		_delay_ms(500);
+		
+		
+		MoveXY_absolute(XlocArr[row][column], YlocArr[row]);
+		pauseUntilStop();
+		_delay_ms(200);
+		} else {
+		MoveXY_absolute(XlocArr[row][column], YlocArr[row]);
+		pauseUntilStop();
+		_delay_ms(200);
+		
+		CWturnWrist();
+		_delay_ms(500);
+		innerTurnElbow();
+		_delay_ms(500);
+	}
+	//---------------------------------------------------------
+	
+	//음료수 놓음---------------------------------------------
+	holdHand_thin();
+	_delay_ms(100);
+	MoveXY_relative(0, -50);
+	pauseUntilStop();
+	_delay_ms(200);
+	
+	openHand();
+	_delay_ms(1500);
+	
+	MoveXY_relative(0, 50);
+	pauseUntilStop();
+	_delay_ms(200);
+	//----------------------------------------------------------
+	
+	//팔 뺌-----------------------------------------------------
+	if(XlocArr[row][column] <= 250) {
+		MoveXY_absolute(250, YlocArr[row]);
+		pauseUntilStop();
+		_delay_ms(200);
+	}
+	
+	closeHand();
+	_delay_ms(200);
+	
+	normalTurnElbow();
+	_delay_ms(500);
+	normalWrist();
+	_delay_ms(500);
+	//----------------------------------------------------------
+	
+	//종료------------------------------------------------------
+	//---------------------------------------------------------
+}
+
+void manualMode(void) {
 	int wronginput=0;
 	
 	set_V_Disable();//PORTC0 low : disable vertical motor
@@ -289,4 +299,59 @@ void manualmode(void) {
 
 void setHereas00(void) {
 	curX = 0; curY = 0;
+}
+
+
+void autoFulfillMode(void) {
+	unsigned int row;
+	unsigned int column;
+	
+	OUTPUT.put = UART0_transmit;
+	OUTPUT.get = NULL;
+	OUTPUT.flags = _FDEV_SETUP_WRITE;
+
+	INPUT.put = NULL;
+	INPUT.get = UART0_receive;
+	INPUT.flags = _FDEV_SETUP_READ;
+	
+	setHereas00();
+	
+	while(1) {
+		if(UCSR1A & (1<<RXC1)) {
+			
+			OUTPUT.put = UART1_transmit;
+			OUTPUT.get = NULL;
+			OUTPUT.flags = _FDEV_SETUP_WRITE;
+
+			INPUT.put = NULL;
+			INPUT.get = UART1_receive;
+			INPUT.flags = _FDEV_SETUP_READ;
+			
+			printf("\r\n get out from autoFulfuillMode\r\n");
+			break;
+		} 
+		
+		printf("n");
+		scanf("%u,%u", &row, &column);
+		
+		while(row>=5||column>=9) {
+			printf("r");
+			scanf("%u,%u", &row, &column);
+		}
+		
+		if(row==4) {
+			OUTPUT.put = UART1_transmit;
+			OUTPUT.get = NULL;
+			OUTPUT.flags = _FDEV_SETUP_WRITE;
+
+			INPUT.put = NULL;
+			INPUT.get = UART1_receive;
+			INPUT.flags = _FDEV_SETUP_READ;
+			
+			printf("\r\n get out from autoFulfuillMode\r\n");
+			break;
+		}
+		
+		fulfill(row, column);
+	}
 }

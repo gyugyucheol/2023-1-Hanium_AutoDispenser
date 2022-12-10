@@ -172,6 +172,12 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="UART0.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="UART0.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="UART1.c">
       <SubType>compile</SubType>
     </Compile>

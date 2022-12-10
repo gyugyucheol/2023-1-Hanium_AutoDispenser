@@ -8,11 +8,13 @@
 #include "servoMove.h"
 #include "stepMove.h"
 #include "UART1.h"
+#include "UART0.h"
 #include "operationMode.h"
 
 
 FILE OUTPUT = FDEV_SETUP_STREAM(UART1_transmit, NULL, _FDEV_SETUP_WRITE);
 FILE INPUT = FDEV_SETUP_STREAM(NULL, UART1_receive, _FDEV_SETUP_READ);
+
 
 //---------------grobal variable through file-------------------------
 int curX = 0;
@@ -88,6 +90,8 @@ int main(void)
 	stdout = &OUTPUT;
 	stdin = &INPUT;
 	
+	UART0_init();
+	
 	
 	basePoseArm();
 	_delay_ms(5000);
@@ -99,17 +103,19 @@ int main(void)
 		do {
 			wronginput = 0;
 			
-			printf("Testmode(1), automode(2), manualmode(3), setHereAs[0,0](4)?");
+			printf("TestMode(1), manualFulfillMode(2), manualMode(3), setHereAs[0,0](4), autoFulfillMode(5)?");
 			scanf("%s", uartBuffer);
 			
 			if(strcasecmp(uartBuffer, "1")==0) 
-				testmode();
+				testMode();
 			else if (strcasecmp(uartBuffer, "2")==0) 
-				automode();
+				manualFulfillMode();
 			else if (strcasecmp(uartBuffer, "3")==0)
-				manualmode();
+				manualMode();
 			else if (strcasecmp(uartBuffer, "4")==0)
 				setHereas00();
+			else if (strcasecmp(uartBuffer, "5")==0)
+				autoFulfillMode();
 			else{
 				printf("input '1', '2', '3' or '4'\r\n");
 				wronginput = 1;

@@ -6,12 +6,12 @@ void UART1_init(void)
 	UBRR1H = 0x00;			// 9600 보율로 설정
 	UBRR1L = 207;
 	
-	UCSR1A |= _BV(U2X1);			// 2배속 모드
+	UCSR1A |= 1<<U2X1;			// 2배속 모드
 	// 비동기, 8비트 데이터, 패리티 없음, 1비트 정지 비트 모드
 	UCSR1C |= 0x06;
 	
-	UCSR1B |= _BV(RXEN1);		// 송수신 가능
-	UCSR1B |= _BV(TXEN1);
+	UCSR1B |= 1<<RXEN1;		// 송수신 가능
+	UCSR1B |= 1<<TXEN1;
 }
 
 void UART1_transmit(char data)
