@@ -9,4 +9,6 @@ course search program project repository
    
 참고 https://nexp.tistory.com/3041
    
-dcmi를 이용한 카메라 입력
+dcmi를 이용한 카메라 입력   
+https://www.st.com/resource/en/application_note/an5020-digital-camera-interface-dcmi-on-stm32-mcus-stmicroelectronics.pdf
+
